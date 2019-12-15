@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, InputNumber, Radio, Modal, Cascader } from 'antd';
+import { IFormProps } from 'types';
 
 const FormItem = Form.Item;
 
@@ -13,20 +14,19 @@ const formItemLayout = {
   },
 };
 
-interface IModalProps {
+interface IModalProps extends IFormProps {
   type: string;
-  item: object;
+  item: any;
   onOk: Function;
   form: any;
 }
 
-@Form.create()
 class UserModal extends PureComponent<IModalProps> {
   handleOk = () => {
     const { item = {}, onOk, form } = this.props;
     const { validateFields, getFieldsValue } = form;
 
-    validateFields(errors => {
+    validateFields((errors: any) => {
       if (errors) {
         return;
       }
@@ -123,4 +123,4 @@ class UserModal extends PureComponent<IModalProps> {
   }
 }
 
-export default UserModal;
+export default Form.create()(UserModal);

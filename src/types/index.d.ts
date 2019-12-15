@@ -1,3 +1,5 @@
+import { FormComponentProps } from 'antd/lib/form/Form';
+
 export interface IMenuItem {
   id: string;
   icon?: string;
@@ -15,5 +17,7 @@ export interface IUser {
   phone: string;
   updated_at: string;
 }
+
+export interface IFormProps extends FormComponentProps {}
 
 export type IMenus = Array<IMenuItem>;

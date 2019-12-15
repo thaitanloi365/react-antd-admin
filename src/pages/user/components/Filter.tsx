@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { FilterItem } from 'components';
 import { Form, Button, Row, Col, DatePicker, Input, Cascader } from 'antd';
-import { FormProps } from 'antd/lib/form';
+import { IFormProps } from 'types';
 const { Search } = Input;
 const { RangePicker } = DatePicker;
 
@@ -19,16 +19,14 @@ const TwoColProps = {
   xl: 96,
 };
 
-interface IFilterProps {
+interface IFilterProps extends IFormProps {
   onAdd: () => void;
-  form: FormProps;
-  filter: object;
-  onFilterChange: () => void;
+  filter: any;
+  onFilterChange: (fields: any) => void;
 }
 
-@Form.create()
 class Filter extends Component<IFilterProps> {
-  handleFields = fields => {
+  handleFields = (fields: any) => {
     const { createTime } = fields;
     if (createTime.length) {
       fields.createTime = [
@@ -65,7 +63,7 @@ class Filter extends Component<IFilterProps> {
     setFieldsValue(fields);
     this.handleSubmit();
   };
-  handleChange = (key, values) => {
+  handleChange = (key: any, values: any) => {
     const { form, onFilterChange } = this.props;
     const { getFieldsValue } = form;
 
@@ -144,4 +142,4 @@ class Filter extends Component<IFilterProps> {
   }
 }
 
-export default Filter;
+export default Form.create({ name: 'filter' })(Filter);

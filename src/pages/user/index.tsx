@@ -15,7 +15,6 @@ interface IUserProps {
   location: any;
 }
 
-@connect(({ user, loading }) => ({ user, loading }))
 class User extends PureComponent<IUserProps> {
   handleRefresh = (newQuery?: Object) => {
     const { location } = this.props;
@@ -184,4 +183,4 @@ class User extends PureComponent<IUserProps> {
   }
 }
 
-export default User;
+export default connect(({ user, loading }: IUserProps) => ({ user, loading }))(User);
