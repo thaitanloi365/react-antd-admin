@@ -5,26 +5,6 @@ import slash from 'slash2';
 // ref: https://umijs.org/config/
 const config: IConfig = {
   treeShaking: true,
-  // routes: [
-  //   {
-  //     path: '/',
-  //     component: '../pages/index.tsx',
-  //   },
-  //   {
-  //     path: '/login',
-  //     component: '../pages/login/index.tsx',
-  //   },
-  //   {
-  //     path: '/dashboard',
-  //     component: '../layouts/PrimaryLayout.tsx',
-  //     routes: [{ path: '/dashboard', component: '../pages/dashboard/index.tsx' }],
-  //   },
-  //   {
-  //     path: '/user',
-  //     component: '../layouts/PrimaryLayout.tsx',
-  //     routes: [{ path: '/user', component: '../pages/user/index.tsx' }],
-  //   },
-  // ],
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     [

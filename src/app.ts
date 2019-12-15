@@ -1,9 +1,16 @@
+import { message } from 'antd';
 export const dva = {
   config: {
-    onError(e) {
+    onError(e, a) {
       e.preventDefault();
-      console.error(e.message);
+      if (e.message) {
+        message.error(e.message);
+      } else {
+        /* eslint-disable */
+        console.error(e);
+      }
     },
   },
+
   plugins: [require('dva-logger')()],
 };

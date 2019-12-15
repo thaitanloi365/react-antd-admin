@@ -2,7 +2,7 @@ export default {
   siteName: 'Admin',
   copyright: 'Ant Design Admin  ©2019 zuiidea',
   logoPath: '/logo.svg',
-  apiPrefix: '/api/v1',
+  apiPrefix: 'http://localhost:8080',
   fixedHeader: true, // sticky primary layout header
 
   /* Layout configuration, specify which layout to use for route. */
