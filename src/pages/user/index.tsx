@@ -7,6 +7,7 @@ import { stringify } from 'qs';
 import List from './components/List';
 import Filter from './components/Filter';
 import Modal from './components/Modal';
+import { IConnectState } from 'models';
 
 interface IUserProps {
   user: any;
@@ -183,4 +184,4 @@ class User extends PureComponent<IUserProps> {
   }
 }
 
-export default connect(({ user, loading }: IUserProps) => ({ user, loading }))(User);
+export default connect(({ user, loading }: IConnectState) => ({ user, loading }))(User);

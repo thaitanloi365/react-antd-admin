@@ -13,20 +13,12 @@ import styles from './PrimaryLayout.less';
 import store from 'store';
 import { ISiderProps } from 'components/Layout/Sider';
 import { IHeaderProps } from 'components/Layout/Header';
-import { RouteComponentProps } from 'react-router-dom';
+import { IConnectState, IConnectProps } from 'models';
 
 const { Content } = Layout;
 const { Header, Bread, Sider } = MyLayout;
 
-export interface IPrimaryLayoutProps extends Partial<RouteComponentProps> {
-  dispatch: Dispatch<any>;
-  app: {
-    theme: 'light' | 'dark';
-    collapsed: boolean;
-    notifications: Array<any>;
-  };
-  loading: Object;
-}
+export interface IPrimaryLayoutProps extends IConnectProps<IConnectState>, IConnectState {}
 
 class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
   state = {
@@ -145,4 +137,6 @@ class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
   }
 }
 
-export default withRouter(connect(({ app, loading }) => ({ app, loading }))(PrimaryLayout));
+// @ts-ignore
+const withConnect = connect(({ app, loading }: IConnectState) => ({ app, loading }))(PrimaryLayout);
+export default withRouter(withConnect);

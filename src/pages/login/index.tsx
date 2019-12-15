@@ -3,14 +3,13 @@ import { connect } from 'dva';
 import { Button, Row, Form, Input } from 'antd';
 import { config } from 'utils';
 import { IFormProps } from 'types';
+import { IConnectProps, IConnectState } from 'models';
 import styles from './index.less';
 
 const FormItem = Form.Item;
 
-interface ILoginProps extends IFormProps {
-  loading: any;
+interface ILoginProps extends IFormProps, IConnectProps, IConnectState {
   form: any;
-  dispatch: any;
 }
 
 class Login extends PureComponent<ILoginProps> {
@@ -67,4 +66,4 @@ class Login extends PureComponent<ILoginProps> {
   }
 }
 
-export default connect(({ loading }: ILoginProps) => ({ loading }))(Form.create()(Login));
+export default connect(({ loading }: IConnectState) => ({ loading }))(Form.create()(Login));

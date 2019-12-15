@@ -17,6 +17,7 @@
     "skipLibCheck": true,
     "strictNullChecks": false,
     "experimentalDecorators": true,
+    "allowUnusedLabels": false,
     "strict": true,
     "paths": {
       "*": ["./src/*"]

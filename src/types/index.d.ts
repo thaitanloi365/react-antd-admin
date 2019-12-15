@@ -1,5 +1,18 @@
 import { FormComponentProps } from 'antd/lib/form/Form';
+import { Reducer } from 'react';
+import { Effect } from 'dva';
+import { AnyAction } from 'redux';
+import { RouterTypes } from 'umi';
 
+import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
+import { UserModelState } from './user';
+import { LoginModelType } from './login';
+
+export type ITheme = 'dark' | 'light';
+export interface INotificationItem {
+  title: string;
+  date: Date;
+}
 export interface IMenuItem {
   id: string;
   icon?: string;
@@ -17,7 +30,6 @@ export interface IUser {
   phone: string;
   updated_at: string;
 }
-
 export interface IFormProps extends FormComponentProps {}
 
 export type IMenus = Array<IMenuItem>;

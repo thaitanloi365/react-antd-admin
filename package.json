@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "ant-design-pro": "^2.3.2",
+    "axios": "^0.19.0",
     "classnames": "^2.2.6",
     "dva-model-extend": "^0.1.2",
     "enquire-js": "^0.2.1",

@@ -8,6 +8,8 @@ import { queryLayout, pathMatchRegexp } from 'utils';
 import { CANCEL_REQUEST_MESSAGE } from 'utils/constants';
 import { logoutUser, queryUserInfo } from 'services/user';
 import config from 'utils/config';
+import { IMenuItem, INotificationItem, ITheme } from 'types';
+import { IModel, Reducer, Subscription, IConnectState } from 'models';
 
 const goDashboard = () => {
   if (pathMatchRegexp(['/', '/login'], window.location.pathname)) {
@@ -17,7 +19,34 @@ const goDashboard = () => {
   }
 };
 
-export default {
+const shouldFetchPrivateData = () => {
+  return !pathMatchRegexp('/login', window.location.pathname);
+};
+export interface IAppModelState {
+  routeList: Array<IMenuItem>;
+  locationPathname: string;
+  locationQuery: any;
+  theme: ITheme;
+  collapsed: boolean;
+  notifications: Array<INotificationItem>;
+}
+
+export interface IAppModelType extends IModel<IAppModelState> {
+  namespace: 'app';
+  reducers: {
+    updateState: Reducer<IAppModelState>;
+    handleThemeChange: Reducer<IAppModelState>;
+    handleCollapseChange: Reducer<IAppModelState>;
+    allNotificationsRead: Reducer<IAppModelState>;
+  };
+  subscriptions: {
+    setup: Subscription;
+    setupHistory: Subscription;
+    setupRequestCancel: Subscription;
+  };
+}
+
+const AppModel: IAppModelType = {
   namespace: 'app',
   state: {
     routeList: [
@@ -25,8 +54,7 @@ export default {
         id: '1',
         icon: 'laptop',
         name: 'Dashboard',
-        zhName: '仪表盘',
-        router: '/dashboard',
+        route: '/dashboard',
       },
     ],
     locationPathname: '',
@@ -54,6 +82,7 @@ export default {
           type: 'updateState',
           payload: {
             locationPathname: location.pathname,
+            // @ts-ignore
             locationQuery: location.query,
           },
         });
@@ -62,8 +91,10 @@ export default {
 
     setupRequestCancel({ history }) {
       history.listen(() => {
+        // @ts-ignore
         const { cancelRequest = new Map() } = window;
 
+        // @ts-ignore
         cancelRequest.forEach((value, key) => {
           if (value.pathname !== window.location.pathname) {
             value.cancel(CANCEL_REQUEST_MESSAGE);
@@ -77,30 +108,21 @@ export default {
     *query({ payload }, { call, put, select }) {
       // store isInit to prevent query trigger by refresh
       const isInit = store.get('isInit');
+      const token = store.get('token');
       if (isInit) {
         goDashboard();
         return;
       }
-      const { locationPathname } = yield select(_ => _.app);
-      const { success, user } = yield call(queryUserInfo, payload);
+
+      if (!shouldFetchPrivateData()) {
+        return;
+      }
+
+      const { locationPathname } = yield select((state: IConnectState) => state.app);
+      const { success, data: user } = yield call(queryUserInfo, payload);
+
+      console.log('user', user, success);
       if (success && user) {
-        const { list } = yield call(queryRouteList);
-        const { permissions } = user;
-        let routeList = list;
-        if (permissions.role === ROLE_TYPE.ADMIN || permissions.role === ROLE_TYPE.DEVELOPER) {
-          permissions.visit = list.map(item => item.id);
-        } else {
-          routeList = list.filter(item => {
-            const cases = [
-              permissions.visit.includes(item.id),
-              item.mpid ? permissions.visit.includes(item.mpid) || item.mpid === '-1' : true,
-              item.bpid ? permissions.visit.includes(item.bpid) : true,
-            ];
-            return cases.every(_ => _);
-          });
-        }
-        store.set('routeList', routeList);
-        store.set('permissions', permissions);
         store.set('user', user);
         store.set('isInit', true);
         goDashboard();
@@ -114,14 +136,17 @@ export default {
       }
     },
 
-    *signOut({ payload }, { call, put }) {
+    *signOut({ payload }, { call, select }) {
       const data = yield call(logoutUser);
+      const { locationPathname } = yield select((state: IConnectState) => state.app);
       if (data.success) {
-        store.set('routeList', []);
-        store.set('permissions', { visit: [] });
-        store.set('user', {});
-        store.set('isInit', false);
-        yield put({ type: 'query' });
+        store.clearAll();
+        router.push({
+          pathname: '/login',
+          search: stringify({
+            from: locationPathname,
+          }),
+        });
       } else {
         throw data;
       }
@@ -138,15 +163,20 @@ export default {
     handleThemeChange(state, { payload }) {
       store.set('theme', payload);
       state.theme = payload;
+      return state;
     },
 
     handleCollapseChange(state, { payload }) {
       store.set('collapsed', payload);
       state.collapsed = payload;
+      return state;
     },
 
     allNotificationsRead(state) {
       state.notifications = [];
+      return state;
     },
   },
 };
+
+export default AppModel;
