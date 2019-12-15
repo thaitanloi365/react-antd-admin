@@ -50,3 +50,9 @@ export async function removeUserList(params: LoginParamsType) {
     data: params,
   });
 }
+
+export async function queryUser(id: string) {
+  return request(`/api/admin/users/${id}`, {
+    method: 'GET',
+  });
+}
