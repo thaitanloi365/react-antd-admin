@@ -1,6 +1,7 @@
 import { extend, ResponseError } from 'umi-request';
 import { notification } from 'antd';
 import { getToken } from './token';
+import config from './config';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -42,7 +43,7 @@ const errorHandler = (responseError: ResponseError): Response => {
 const request = extend({
   errorHandler,
   credentials: 'omit',
-  prefix: 'http://localhost:8080',
+  prefix: config.apiPrefix,
 });
 
 request.interceptors.request.use((url, options) => {
