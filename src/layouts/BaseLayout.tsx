@@ -20,8 +20,6 @@ interface IBaseLayoutProps extends RouteComponentProps {
   loading: any;
 }
 
-@withRouter
-@connect(({ loading }) => ({ loading }))
 class BaseLayout extends PureComponent<IBaseLayoutProps, any> {
   previousPath = '';
   render() {
@@ -50,4 +48,4 @@ class BaseLayout extends PureComponent<IBaseLayoutProps, any> {
   }
 }
 
-export default BaseLayout;
+export default withRouter(connect(({ loading }: IBaseLayoutProps) => ({ loading }))(BaseLayout));

@@ -28,8 +28,6 @@ export interface IPrimaryLayoutProps extends Partial<RouteComponentProps> {
   loading: Object;
 }
 
-@withRouter
-@connect(({ app, loading }) => ({ app, loading }))
 class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
   state = {
     isMobile: false,
@@ -147,4 +145,4 @@ class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
   }
 }
 
-export default PrimaryLayout;
+export default withRouter(connect(({ app, loading }) => ({ app, loading }))(PrimaryLayout));
