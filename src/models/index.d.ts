@@ -6,6 +6,7 @@ import { IUserModelState } from './user';
 import { LoginModelType } from './login';
 import { Subscription, Effect } from 'dva';
 import { IAppModelType, IAppModelState } from './app';
+import { IPostModelState } from './post';
 
 export { GlobalModelState, Reducer, Effect, Subscription };
 
@@ -34,6 +35,7 @@ export interface IConnectState {
   loading: ILoadingState;
   user: IUserModelState;
   login: LoginModelType;
+  post: IPostModelState;
 }
 
 export interface Route extends MenuDataItem {

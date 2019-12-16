@@ -30,6 +30,20 @@ const menus: IMenus = [
 
     route: '/user/:id',
   },
+  {
+    id: '3',
+    breadcrumbParentId: '1',
+    name: 'Posts',
+    icon: 'cloud-upload',
+    route: '/post',
+  },
+  {
+    id: '31',
+    menuParentId: '-1',
+    breadcrumbParentId: '2',
+    name: 'Post Detail',
+    route: '/post/:id',
+  },
 ];
 
 export default {

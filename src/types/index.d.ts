@@ -30,6 +30,17 @@ export interface IUser {
   phone: string;
   updated_at: string;
 }
+
+export interface IPost {
+  created_at: string;
+  title: string;
+  content: string;
+  tags: string[];
+  owner: any;
+  owner_id: number;
+  updated_at: string;
+}
+
 export interface IFormProps extends FormComponentProps {}
 
 export type IMenus = Array<IMenuItem>;
