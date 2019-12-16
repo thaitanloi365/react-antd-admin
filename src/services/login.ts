@@ -6,7 +6,7 @@ export interface LoginParamsType {
 }
 
 export async function accountLogin(params: LoginParamsType) {
-  return request('/api/login', {
+  return request('/login', {
     method: 'POST',
     data: params,
   });

@@ -6,7 +6,7 @@ export interface LoginParamsType {
 }
 
 export async function queryUserList() {
-  return request('/api/admin/users', {
+  return request('/cms/users', {
     method: 'GET',
   });
 }
@@ -18,7 +18,7 @@ export async function logoutUser() {
 }
 
 export async function queryUserInfo(params: LoginParamsType) {
-  return request('/api/app/user', {
+  return request('/cms/users', {
     method: 'GET',
   });
 }
@@ -52,7 +52,7 @@ export async function removeUserList(params: LoginParamsType) {
 }
 
 export async function queryUser(id: string) {
-  return request(`/api/admin/users/${id}`, {
+  return request(`/admin/users/${id}`, {
     method: 'GET',
   });
 }
