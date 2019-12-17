@@ -29,7 +29,14 @@ export interface IUser {
   name: string;
   phone: string;
   updated_at: string;
+  avatar: string;
 }
+
+export interface IFilter {
+  name: string;
+  createTime: Array<Date>;
+}
+
 export interface IFormProps extends FormComponentProps {}
 
 export type IMenus = Array<IMenuItem>;

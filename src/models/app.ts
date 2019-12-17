@@ -2,14 +2,14 @@
 
 import { router } from 'utils';
 import { stringify } from 'qs';
-import store from 'store';
-import { ROLE_TYPE } from 'utils/constants';
 import { queryLayout, pathMatchRegexp } from 'utils';
 import { CANCEL_REQUEST_MESSAGE } from 'utils/constants';
 import { logoutUser, queryUserInfo } from 'services/user';
-import config from 'utils/config';
 import { IMenuItem, INotificationItem, ITheme } from 'types';
 import { IModel, Reducer, Subscription, IConnectState } from 'models';
+import { Effect } from 'dva';
+import store from 'store';
+import config from 'utils/config';
 
 const goDashboard = () => {
   if (pathMatchRegexp(['/', '/login'], window.location.pathname)) {
@@ -19,9 +19,6 @@ const goDashboard = () => {
   }
 };
 
-const shouldFetchPrivateData = () => {
-  return !pathMatchRegexp('/login', window.location.pathname);
-};
 export interface IAppModelState {
   routeList: Array<IMenuItem>;
   locationPathname: string;
@@ -43,6 +40,11 @@ export interface IAppModelType extends IModel<IAppModelState> {
     setup: Subscription;
     setupHistory: Subscription;
     setupRequestCancel: Subscription;
+  };
+  effects: {
+    sessionTimeout: Effect;
+    query: Effect;
+    signOut: Effect;
   };
 }
 
@@ -106,25 +108,22 @@ const AppModel: IAppModelType = {
   },
   effects: {
     *query({ payload }, { call, put, select }) {
-      // store isInit to prevent query trigger by refresh
-      const isInit = store.get('isInit');
-      const token = store.get('token');
-      if (isInit) {
-        goDashboard();
-        return;
-      }
-
-      if (!shouldFetchPrivateData()) {
-        return;
-      }
-
+      const token = store.get('token', '');
       const { locationPathname } = yield select((state: IConnectState) => state.app);
-      const { success, data: user } = yield call(queryUserInfo, payload);
 
-      console.log('user', user, success);
+      if (token === '') {
+        router.push({
+          pathname: '/login',
+          search: stringify({
+            from: locationPathname,
+          }),
+        });
+        return;
+      }
+
+      const { success, data: user } = yield call(queryUserInfo, payload);
       if (success && user) {
         store.set('user', user);
-        store.set('isInit', true);
         goDashboard();
       } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
         router.push({
@@ -150,6 +149,17 @@ const AppModel: IAppModelType = {
       } else {
         throw data;
       }
+    },
+
+    *sessionTimeout({ payload }, { call, select }) {
+      const { locationPathname } = yield select((state: IConnectState) => state.app);
+      store.clearAll();
+      router.push({
+        pathname: '/login',
+        search: stringify({
+          from: locationPathname,
+        }),
+      });
     },
   },
   reducers: {

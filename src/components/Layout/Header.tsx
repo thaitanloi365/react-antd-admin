@@ -4,21 +4,19 @@ import { Ellipsis } from 'ant-design-pro';
 import moment from 'moment';
 import classnames from 'classnames';
 import styles from './Header.less';
-import { IMenus } from 'types';
+import { IMenus, IUser } from 'types';
 
 const { SubMenu } = Menu;
 
 export interface IHeaderProps {
   fixed: boolean;
-  user: Object;
+  user: IUser;
   menus: IMenus;
   collapsed: boolean;
   onSignOut: () => void;
   notifications: Array<any>;
   onCollapseChange: (collapsed: boolean) => void;
   onAllNotificationsRead: () => void;
-  avatar?: string;
-  username?: string;
 }
 
 class Header extends PureComponent<Partial<IHeaderProps>> {
@@ -28,21 +26,21 @@ class Header extends PureComponent<Partial<IHeaderProps>> {
   render() {
     const {
       fixed,
-      avatar,
-      username,
+      user,
       collapsed,
       notifications = [],
       onCollapseChange,
       onAllNotificationsRead,
     } = this.props;
 
+    const { name, avatar } = user;
     const rightContent = [
       <Menu key="user" mode="horizontal" onClick={this.handleClickMenu}>
         <SubMenu
           title={
             <Fragment>
               <span style={{ color: '#999', marginRight: 4 }}>Hi,</span>
-              <span>{username}</span>
+              <span>{name}</span>
               <Avatar style={{ marginLeft: 8 }} src={avatar} />
             </Fragment>
           }

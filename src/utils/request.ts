@@ -111,7 +111,12 @@ const request = (url: string, options: AxiosRequestConfig) => {
         statusCode = 600;
         msg = error.message || 'Network Error';
       }
-
+      if (statusCode === 401) {
+        // @ts-ignore
+        window.g_app._store.dispatch({
+          type: 'app/sessionTimeout',
+        });
+      }
       /* eslint-disable */
       return Promise.reject({
         success: false,
