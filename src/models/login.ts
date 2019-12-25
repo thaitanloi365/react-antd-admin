@@ -2,15 +2,16 @@ import { accountLogin } from 'services/login';
 import { IModel, Effect } from './index';
 import router from 'umi/router';
 import store from 'store';
+
 export interface ILoginModelState {}
 
-export interface IUserModelType extends IModel<ILoginModelState> {
+export interface ILoginModelType extends IModel<ILoginModelState> {
   effects: {
     login: Effect;
   };
 }
 
-const Model: IUserModelType = {
+const Model: ILoginModelType = {
   namespace: 'login',
 
   state: {},

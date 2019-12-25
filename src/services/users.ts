@@ -1,13 +1,9 @@
 import request from 'utils/request';
-import { IUser } from 'types';
+import { IUser, ILoginParamsType, IUserQueryParamsType } from 'types';
 
-export interface LoginParamsType {
-  email: string;
-  password: string;
-}
-
-export async function queryUserList() {
-  return request('/api/admin/users', {
+export async function queryUserList(params: IUserQueryParamsType) {
+  const { name = '' } = params;
+  return request(`/api/admin/users?name=${name}`, {
     method: 'GET',
   });
 }
@@ -18,7 +14,7 @@ export async function logoutUser() {
   });
 }
 
-export async function queryUserInfo(params: LoginParamsType) {
+export async function queryUserInfo(params: ILoginParamsType) {
   return request('/api/app/user', {
     method: 'GET',
   });
@@ -38,7 +34,7 @@ export async function removeUser(id: string) {
 }
 
 export async function updateUser(params: IUser) {
-  const { id, ...payload } = params
+  const { id, ...payload } = params;
   return request(`/api/admin/users/${id}`, {
     method: 'PUT',
     data: payload,

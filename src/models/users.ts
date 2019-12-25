@@ -1,9 +1,9 @@
 import { pathMatchRegexp } from 'utils';
-import { queryUserList, createUser, removeUser, updateUser, removeUserList } from 'services/user';
+import { queryUserList, createUser, removeUser, updateUser, removeUserList } from 'services/users';
 import { IModel, IConnectState, Reducer, Effect } from './index';
 import { IUser } from 'types';
 
-export type ICurrentItem = Partial<IUser>;
+export type ICurrentItem = IUser;
 
 export interface IUserModelState {
   currentItem: ICurrentItem;
@@ -21,7 +21,7 @@ export interface IUserModelState {
 }
 
 export interface IUserModelType extends IModel<IUserModelState> {
-  namespace: 'user';
+  namespace: 'users';
   effects: {
     query: Effect;
     delete: Effect;
@@ -37,7 +37,7 @@ export interface IUserModelType extends IModel<IUserModelState> {
 }
 
 const UserModel: IUserModelType = {
-  namespace: 'user',
+  namespace: 'users',
   state: {
     currentItem: {},
     modalVisible: false,
@@ -68,10 +68,9 @@ const UserModel: IUserModelType = {
     },
   },
 
-
-
   effects: {
     *query({ payload = {} }, { call, put }) {
+      console.log('*** quer', payload);
       const { success, data } = yield call(queryUserList, payload);
 
       if (success && data) {
@@ -90,9 +89,9 @@ const UserModel: IUserModelType = {
     },
 
     *delete({ payload }, { call, put, select }) {
-      console.log("**** delete", payload)
+      console.log('**** delete', payload);
       const data = yield call(removeUser, payload);
-      const { selectedRowKeys } = yield select((state: IConnectState) => state.user);
+      const { selectedRowKeys } = yield select((state: IConnectState) => state.users);
       if (data.success) {
         yield put({
           type: 'updateState',

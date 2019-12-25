@@ -9,6 +9,17 @@ import { UserModelState } from './user';
 import { LoginModelType } from './login';
 
 export type ITheme = 'dark' | 'light';
+
+export interface ILoginParamsType {
+  email: string;
+  password: string;
+}
+
+export interface IUserQueryParamsType {
+  name: string;
+  created_at: [string, string];
+}
+
 export interface INotificationItem {
   title: string;
   date: Date;
@@ -37,8 +48,8 @@ export interface IFilter {
   createTime: Array<Date>;
 }
 
-export type IOperation = 'create' | 'update'
+export type IOperation = 'create' | 'update';
 
-export interface IFormProps extends FormComponentProps { }
+export interface IFormProps extends FormComponentProps {}
 
 export type IMenus = Array<IMenuItem>;

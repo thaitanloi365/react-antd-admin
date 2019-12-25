@@ -23,7 +23,8 @@ const TwoColProps = {
 interface IFilterProps extends IFormProps {
   onAdd: () => void;
   filter: IFilter;
-  onFilterChange: (fields: any) => void;
+  onFilterChange: (fields: IFilter) => void;
+  onSearchChange?: (name: string) => void;
 }
 
 class Filter extends Component<IFilterProps> {
@@ -42,7 +43,7 @@ class Filter extends Component<IFilterProps> {
     const { onFilterChange, form } = this.props;
     const { getFieldsValue } = form;
 
-    let fields = getFieldsValue();
+    let fields: any = getFieldsValue();
     fields = this.handleFields(fields);
     onFilterChange(fields);
   };
@@ -68,10 +69,17 @@ class Filter extends Component<IFilterProps> {
     const { form, onFilterChange } = this.props;
     const { getFieldsValue } = form;
 
-    let fields = getFieldsValue();
+    let fields: any = getFieldsValue();
     fields[key] = values;
     fields = this.handleFields(fields);
     onFilterChange(fields);
+  };
+
+  handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { onSearchChange } = this.props;
+    if (typeof onSearchChange === 'function') {
+      onSearchChange(event.target.value);
+    }
   };
 
   render() {
@@ -92,7 +100,11 @@ class Filter extends Component<IFilterProps> {
       <Row gutter={24}>
         <Col {...ColProps} xl={{ span: 4 }} md={{ span: 8 }}>
           {getFieldDecorator('name', { initialValue: name })(
-            <Search placeholder="Search Name" onSearch={this.handleSubmit} />,
+            <Search
+              placeholder="Search Name"
+              onSearch={this.handleSubmit}
+              onChange={this.handleSearchChange}
+            />,
           )}
         </Col>
 

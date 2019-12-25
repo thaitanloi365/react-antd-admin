@@ -1,8 +1,23 @@
 import { pathMatchRegexp } from 'utils';
-import { queryUser } from 'services/user';
+import { queryUser } from 'services/users';
+import { IModel, Effect, Reducer } from 'models';
+import { IUser } from 'types';
 
-export default {
-  namespace: 'userDetail',
+export interface IUserDetailModelState {
+  data: IUser | Object;
+}
+
+export interface IUserDetailModelType extends IModel<IUserDetailModelState> {
+  effects: {
+    query: Effect;
+  };
+  reducers: {
+    querySuccess: Reducer;
+  };
+}
+
+const Model: IUserDetailModelType = {
+  namespace: 'userDetails',
 
   state: {
     data: {},
@@ -12,8 +27,9 @@ export default {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
         const match = pathMatchRegexp('/users/:id', pathname);
+
         if (match) {
-          dispatch({ type: 'query', payload: { id: match[1] } });
+          dispatch({ type: 'query', payload: match[1] });
         }
       });
     },
@@ -21,13 +37,14 @@ export default {
 
   effects: {
     *query({ payload }, { call, put }) {
-      const data = yield call(queryUser, payload);
-      const { success, message, status, ...other } = data;
+      console.log('*** payload', payload);
+      const response = yield call(queryUser, payload);
+      const { success, message, status, data } = response;
       if (success) {
         yield put({
           type: 'querySuccess',
           payload: {
-            data: other,
+            data,
           },
         });
       } else {
@@ -46,3 +63,5 @@ export default {
     },
   },
 };
+
+export default Model;

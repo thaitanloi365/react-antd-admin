@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Modal } from 'antd';
-import { ModalProps } from 'antd/lib/modal'
+import { Form, Input, Modal, Row, Col } from 'antd';
+import { ModalProps } from 'antd/lib/modal';
 import { IFormProps, IUser } from 'types';
+import { ImageUpload } from 'components';
+import { ICurrentItem } from 'models/users';
 
 const FormItem = Form.Item;
 
@@ -15,7 +17,7 @@ const formItemLayout = {
 };
 
 interface IModalProps extends IFormProps, ModalProps {
-  item: IUser;
+  item: ICurrentItem;
   onAccept: (item: IUser) => void;
 }
 
@@ -44,9 +46,14 @@ class UserModal extends PureComponent<IModalProps> {
     return (
       <Modal {...modalProps} onOk={this.handleOk}>
         <Form layout="horizontal">
+          <Row type="flex" justify="center">
+            <div>
+              <ImageUpload />
+            </div>
+          </Row>
           <FormItem label="Name" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator('name', {
-              initialValue: item.name,
+              initialValue: item?.name,
               rules: [
                 {
                   required: true,
@@ -56,7 +63,7 @@ class UserModal extends PureComponent<IModalProps> {
           </FormItem>
           <FormItem label="Phone" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator('phone', {
-              initialValue: item.phone,
+              initialValue: item?.phone,
               // rules: [
               //   {
               //     required: true,
@@ -68,7 +75,7 @@ class UserModal extends PureComponent<IModalProps> {
           </FormItem>
           <FormItem label="Email" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator('email', {
-              initialValue: item.email,
+              initialValue: item?.email,
               rules: [
                 {
                   required: true,

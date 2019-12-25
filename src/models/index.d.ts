@@ -2,10 +2,11 @@ import { AnyAction, Reducer } from 'redux';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouterTypes } from 'umi';
 import { GlobalModelState } from './global';
-import { IUserModelState } from './user';
-import { LoginModelType } from './login';
+import { IUserModelState } from './users';
+import { ILoginModelType } from './login';
 import { Subscription, Effect } from 'dva';
 import { IAppModelType, IAppModelState } from './app';
+import { IUserDetailModelState } from 'pages/users/$id/models/detail';
 
 export { GlobalModelState, Reducer, Effect, Subscription };
 
@@ -32,8 +33,9 @@ export interface ILoadingState {
 export interface IConnectState {
   app: IAppModelState;
   loading: ILoadingState;
-  user: IUserModelState;
-  login: LoginModelType;
+  users: IUserModelState;
+  login: ILoginModelType;
+  userDetails: IUserDetailModelState;
 }
 
 export interface Route extends MenuDataItem {
