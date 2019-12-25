@@ -20,15 +20,14 @@ const menus: IMenus = [
     breadcrumbParentId: '1',
     name: 'Users',
     icon: 'user',
-    route: '/user',
+    route: '/users',
   },
   {
     id: '21',
     menuParentId: '-1',
     breadcrumbParentId: '2',
     name: 'User Detail',
-
-    route: '/user/:id',
+    route: '/users/:id',
   },
 ];
 

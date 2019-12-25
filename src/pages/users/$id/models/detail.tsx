@@ -11,7 +11,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
-        const match = pathMatchRegexp('/user/:id', pathname);
+        const match = pathMatchRegexp('/users/:id', pathname);
         if (match) {
           dispatch({ type: 'query', payload: { id: match[1] } });
         }

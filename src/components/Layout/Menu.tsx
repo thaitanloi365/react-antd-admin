@@ -17,7 +17,7 @@ interface IMenuProps extends RouteComponentProps {
   collapsed: boolean;
 }
 
-@withRouter
+
 class SiderMenu extends PureComponent<Partial<IMenuProps>> {
   state = {
     openKeys: store.get('openKeys') || [],
@@ -85,8 +85,8 @@ class SiderMenu extends PureComponent<Partial<IMenuProps>> {
     const menuProps = collapsed
       ? {}
       : {
-          openKeys: this.state.openKeys,
-        };
+        openKeys: this.state.openKeys,
+      };
 
     return (
       <Menu
@@ -97,8 +97,8 @@ class SiderMenu extends PureComponent<Partial<IMenuProps>> {
         onClick={
           isMobile
             ? () => {
-                onCollapseChange(true);
-              }
+              onCollapseChange(true);
+            }
             : undefined
         }
         {...menuProps}
@@ -109,4 +109,4 @@ class SiderMenu extends PureComponent<Partial<IMenuProps>> {
   }
 }
 
-export default SiderMenu;
+export default withRouter(SiderMenu);

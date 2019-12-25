@@ -133,4 +133,4 @@ class Filter extends Component<IFilterProps> {
   }
 }
 
-export default Form.create({ name: 'filter' })(Filter);
+export default Form.create<IFilterProps>({ name: 'filter' })(Filter);

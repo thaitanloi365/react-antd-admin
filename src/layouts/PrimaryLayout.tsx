@@ -1,6 +1,6 @@
 /* global window */
 /* global document */
-import React, { PureComponent, Fragment, Dispatch } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import withRouter from 'umi/withRouter';
 import { connect } from 'dva';
 import { MyLayout } from 'components';
@@ -18,7 +18,7 @@ import { IConnectState, IConnectProps } from 'models';
 const { Content } = Layout;
 const { Header, Bread, Sider } = MyLayout;
 
-export interface IPrimaryLayoutProps extends IConnectProps<IConnectState>, IConnectState {}
+export interface IPrimaryLayoutProps extends IConnectProps<IConnectState>, IConnectState { }
 
 class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
   state = {
@@ -49,8 +49,7 @@ class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
   };
 
   render() {
-    const { app, location, dispatch, children } = this.props;
-    console.log('*** props', this.props);
+    const { app, dispatch, children } = this.props;
     const { theme, collapsed, notifications } = app || {};
     const user = store.get('user') || {};
     const token = store.get('token') || '';
@@ -97,7 +96,7 @@ class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
         <Layout>
           {isMobile ? (
             <Drawer
-              maskClosable
+              maskClosable={true}
               closable={false}
               onClose={onCollapseChange.bind(this, !collapsed)}
               visible={!collapsed}
@@ -111,8 +110,8 @@ class PrimaryLayout extends PureComponent<IPrimaryLayoutProps> {
               <Sider {...siderProps} collapsed={false} />
             </Drawer>
           ) : (
-            <Sider {...siderProps} />
-          )}
+              <Sider {...siderProps} />
+            )}
           <div
             className={styles.container}
             style={{ paddingTop: config.fixedHeader ? 72 : 0 }}

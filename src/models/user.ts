@@ -56,7 +56,7 @@ const UserModel: IUserModelType = {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (pathMatchRegexp('/user', location.pathname)) {
+        if (pathMatchRegexp('/users', location.pathname)) {
           // @ts-ignore
           const payload = location.query || { page: 1, pageSize: 10 };
           dispatch({
@@ -68,6 +68,8 @@ const UserModel: IUserModelType = {
     },
   },
 
+
+
   effects: {
     *query({ payload = {} }, { call, put }) {
       const { success, data } = yield call(queryUserList, payload);
@@ -76,7 +78,7 @@ const UserModel: IUserModelType = {
         yield put({
           type: 'querySuccess',
           payload: {
-            list: data.data,
+            list: data.records,
             pagination: {
               current: Number(data.page) || 1,
               pageSize: Number(data.per_page) || 10,
@@ -88,7 +90,8 @@ const UserModel: IUserModelType = {
     },
 
     *delete({ payload }, { call, put, select }) {
-      const data = yield call(removeUser, { id: payload });
+      console.log("**** delete", payload)
+      const data = yield call(removeUser, payload);
       const { selectedRowKeys } = yield select((state: IConnectState) => state.user);
       if (data.success) {
         yield put({
@@ -121,9 +124,7 @@ const UserModel: IUserModelType = {
     },
 
     *update({ payload }, { select, call, put }) {
-      const id = yield select(({ user }: IConnectState) => user.currentItem.id);
-      const newUser = { ...payload, id };
-      const data = yield call(updateUser, newUser);
+      const data = yield call(updateUser, payload);
       if (data.success) {
         yield put({ type: 'hideModal' });
       } else {

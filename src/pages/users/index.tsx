@@ -21,6 +21,7 @@ class User extends PureComponent<IUserProps> {
     const { location } = this.props;
     const { query, pathname } = location;
 
+    console.log(newQuery)
     router.push({
       pathname,
       search: stringify(
@@ -52,49 +53,65 @@ class User extends PureComponent<IUserProps> {
     });
   };
 
-  get modalProps() {
-    const { dispatch, user, loading } = this.props;
-    const { currentItem, modalVisible, modalType } = user;
 
-    return {
-      item: modalType === 'create' ? {} : currentItem,
-      visible: modalVisible,
-      destroyOnClose: true,
-      maskClosable: false,
-      confirmLoading: loading.effects[`user/${modalType}`],
-      title: `${modalType === 'create' ? 'Create User' : 'Update User'}`,
-      centered: true,
-      onOk: (data: any) => {
-        dispatch({
-          type: `user/${modalType}`,
-          payload: data,
-        }).then(() => {
-          this.handleRefresh();
+  renderFilter() {
+    const { location, dispatch } = this.props;
+    const { query } = location;
+
+    return <Filter
+      filter={{ ...query }}
+      onFilterChange={value => {
+        this.handleRefresh({
+          ...value,
         });
-      },
-      onCancel() {
+      }} onAdd={() => {
         dispatch({
-          type: 'user/hideModal',
+          type: 'user/showModal',
+          payload: {
+            modalType: 'create',
+          },
         });
-      },
-    };
+      }} />
   }
 
-  get listProps() {
+  renderList() {
     const { dispatch, user, loading } = this.props;
     const { list, pagination, selectedRowKeys } = user;
 
-    return {
-      dataSource: list,
-      loading: loading.effects['user/query'],
-      pagination,
-      onChange: (page: any) => {
+    console.log(this.props)
+    return <List
+      dataSource={list}
+      loading={loading.effects['user/query']}
+      pagination={pagination}
+      rowSelection={{
+        selectedRowKeys,
+        onChange: (keys) => {
+          console.log("**** keys", keys)
+          dispatch({
+            type: 'user/updateState',
+            payload: {
+              selectedRowKeys: keys,
+            },
+          });
+        }
+      }}
+      onEditItem={(record => {
+        dispatch({
+          type: 'user/showModal',
+          payload: {
+            modalType: 'update',
+            currentItem: record,
+          },
+        });
+      })}
+
+      onChange={(page) => {
         this.handleRefresh({
           page: page.current,
           pageSize: page.pageSize,
         });
-      },
-      onDeleteItem: (id: string) => {
+      }}
+      onDeleteItem={(id) => {
         dispatch({
           type: 'user/delete',
           payload: id,
@@ -106,61 +123,45 @@ class User extends PureComponent<IUserProps> {
                 : pagination.current,
           });
         });
-      },
-      onEditItem(item: any) {
-        dispatch({
-          type: 'user/showModal',
-          payload: {
-            modalType: 'update',
-            currentItem: item,
-          },
-        });
-      },
-      rowSelection: {
-        selectedRowKeys,
-        onChange: (keys: Array<string>) => {
-          dispatch({
-            type: 'user/updateState',
-            payload: {
-              selectedRowKeys: keys,
-            },
-          });
-        },
-      },
-    };
+      }}
+
+    />
   }
 
-  get filterProps() {
-    const { location, dispatch } = this.props;
-    const { query } = location;
+  renderModal() {
+    const { dispatch, user, loading } = this.props;
+    const { currentItem, modalVisible, modalType } = user;
 
-    return {
-      filter: {
-        ...query,
-      },
-      onFilterChange: (value?: Object) => {
-        this.handleRefresh({
-          ...value,
-        });
-      },
-      onAdd() {
+    return <Modal
+      item={modalType === 'create' ? {} : currentItem}
+      visible={modalVisible}
+      destroyOnClose={true}
+      centered={true}
+      maskClosable={false}
+      confirmLoading={loading.effects[`user/${modalType}`]}
+      title={`${modalType === 'create' ? 'Create User' : 'Update User'}`}
+      onAccept={(data) => {
         dispatch({
-          type: 'user/showModal',
-          payload: {
-            modalType: 'create',
-          },
+          type: `user/${modalType}`,
+          payload: data,
+        }).then(() => {
+          this.handleRefresh();
         });
-      },
-    };
+      }}
+      onCancel={() => {
+        dispatch({
+          type: 'user/hideModal',
+        });
+      }}
+    />
   }
-
   render() {
     const { user } = this.props;
     const { selectedRowKeys } = user;
 
     return (
-      <Page inner>
-        <Filter {...this.filterProps} />
+      <Page inner={true}>
+        {this.renderFilter()}
         {selectedRowKeys.length > 0 && (
           <Row style={{ marginBottom: 24, textAlign: 'right', fontSize: 13 }}>
             <Col>
@@ -177,8 +178,8 @@ class User extends PureComponent<IUserProps> {
             </Col>
           </Row>
         )}
-        <List {...this.listProps} />
-        <Modal {...this.modalProps} />
+        {this.renderList()}
+        {this.renderModal()}
       </Page>
     );
   }

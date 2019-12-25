@@ -1,4 +1,5 @@
 import request from 'utils/request';
+import { IUser } from 'types';
 
 export interface LoginParamsType {
   email: string;
@@ -23,24 +24,24 @@ export async function queryUserInfo(params: LoginParamsType) {
   });
 }
 
-export async function createUser(params: LoginParamsType) {
-  return request('/api/login', {
+export async function createUser(params: IUser) {
+  return request('/api/register', {
     method: 'POST',
     data: params,
   });
 }
 
-export async function removeUser(params: LoginParamsType) {
-  return request('/api/login', {
-    method: 'POST',
-    data: params,
+export async function removeUser(id: string) {
+  return request(`/api/admin/users/${id}`, {
+    method: 'DELETE',
   });
 }
 
-export async function updateUser(params: LoginParamsType) {
-  return request('/api/login', {
-    method: 'POST',
-    data: params,
+export async function updateUser(params: IUser) {
+  const { id, ...payload } = params
+  return request(`/api/admin/users/${id}`, {
+    method: 'PUT',
+    data: payload,
   });
 }
 

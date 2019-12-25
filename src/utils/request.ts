@@ -82,7 +82,6 @@ const request = (url: string, options: AxiosRequestConfig) => {
         data: result,
       };
 
-      console.log('**** response', res);
       return Promise.resolve(res);
     })
     .catch((error: AxiosError) => {
@@ -127,8 +126,7 @@ const request = (url: string, options: AxiosRequestConfig) => {
 };
 
 axios.interceptors.request.use(
-  function(config) {
-    console.log('**** config', config);
+  function (config) {
     const token = store.get('token');
 
     if (typeof token === 'string' && token !== '') {
@@ -136,16 +134,16 @@ axios.interceptors.request.use(
     }
     return config;
   },
-  function(error) {
+  function (error) {
     return Promise.reject(error);
   },
 );
 
 axios.interceptors.response.use(
-  function(response) {
+  function (response) {
     return response;
   },
-  function(error) {
+  function (error) {
     return Promise.reject(error);
   },
 );

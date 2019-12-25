@@ -37,6 +37,8 @@ export interface IFilter {
   createTime: Array<Date>;
 }
 
-export interface IFormProps extends FormComponentProps {}
+export type IOperation = 'create' | 'update'
+
+export interface IFormProps extends FormComponentProps { }
 
 export type IMenus = Array<IMenuItem>;

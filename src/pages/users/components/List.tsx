@@ -1,15 +1,18 @@
 import React, { PureComponent } from 'react';
 import { Table, Modal, Avatar } from 'antd';
+import { TableProps, ColumnProps } from 'antd/lib/table';
 import { DropOption } from 'components';
 import Link from 'umi/link';
 import styles from './List.less';
-
+import { IUser } from 'types';
+import moment from 'moment'
 const { confirm } = Modal;
 
-interface IListProps {
-  onDeleteItem: Function;
-  onEditItem: Function;
-  location: Location;
+interface IListProps extends TableProps<IUser> {
+  onDeleteItem: (recordId: string | number) => void;
+  onEditItem: (record: IUser) => void;
+  // location: Location;
+  // tableProps: TableProps<IUser>
 }
 
 class List extends PureComponent<IListProps> {
@@ -31,41 +34,26 @@ class List extends PureComponent<IListProps> {
   render() {
     const { onDeleteItem, onEditItem, ...tableProps } = this.props;
 
-    const columns = [
+    const columns: Array<ColumnProps<IUser>> = [
       {
         title: 'Avatar',
-        dataIndex: 'avatar',
         key: 'avatar',
+        dataIndex: 'avatar',
         width: 72,
         fixed: 'left',
-        render: (text: string) => <Avatar style={{ marginLeft: 8 }} src={text} />,
+        render: (text) => <Avatar style={{ marginLeft: 8 }} src={text} />,
       },
       {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        render: (text: string, record: any) => <Link to={`user/${record.id}`}>{text}</Link>,
-      },
-      {
-        title: 'NickName',
-        dataIndex: 'nickName',
-        key: 'nickName',
-      },
-      {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-      },
-      {
-        title: 'Gender',
-        dataIndex: 'isMale',
-        key: 'isMale',
-        render: (text: 'Male' | 'Female') => <span>{text ? 'Male' : 'Female'}</span>,
+        render: (text, record) => <Link to={`users/${record.id}`}>{text}</Link>,
       },
       {
         title: 'Phone',
         dataIndex: 'phone',
         key: 'phone',
+
       },
       {
         title: 'Email',
@@ -73,14 +61,10 @@ class List extends PureComponent<IListProps> {
         key: 'email',
       },
       {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
-      },
-      {
-        title: 'CreateTime',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        title: 'Created At',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (text) => <span >{moment(text).format("YYYY-MM-DD")}</span>,
       },
       {
         title: 'Operation',
@@ -108,11 +92,10 @@ class List extends PureComponent<IListProps> {
           showTotal: total => `Total ${total} Items`,
         }}
         className={styles.table}
-        bordered
+        bordered={true}
         scroll={{ x: 1200 }}
         columns={columns}
-        simple
-        rowKey={record => record.id}
+        rowKey={record => `${record.id}`}
       />
     );
   }
