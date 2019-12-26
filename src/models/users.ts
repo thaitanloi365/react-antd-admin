@@ -1,5 +1,5 @@
 import { pathMatchRegexp } from 'utils';
-import { queryUserList, createUser, removeUser, updateUser, removeUserList } from 'services/users';
+import { queryUserList, createUser, removeUser, updateUser, removeUserList, getS3Signature, uploadImage } from 'services/users';
 import { IModel, IConnectState, Reducer, Effect } from './index';
 import { IUser } from 'types';
 
@@ -39,7 +39,7 @@ export interface IUserModelType extends IModel<IUserModelState> {
 const UserModel: IUserModelType = {
   namespace: 'users',
   state: {
-    currentItem: {},
+    currentItem: null,
     modalVisible: false,
     modalType: 'create',
     selectedRowKeys: [],
@@ -70,7 +70,6 @@ const UserModel: IUserModelType = {
 
   effects: {
     *query({ payload = {} }, { call, put }) {
-      console.log('*** quer', payload);
       const { success, data } = yield call(queryUserList, payload);
 
       if (success && data) {
@@ -89,7 +88,6 @@ const UserModel: IUserModelType = {
     },
 
     *delete({ payload }, { call, put, select }) {
-      console.log('**** delete', payload);
       const data = yield call(removeUser, payload);
       const { selectedRowKeys } = yield select((state: IConnectState) => state.users);
       if (data.success) {
@@ -114,6 +112,26 @@ const UserModel: IUserModelType = {
     },
 
     *create({ payload }, { call, put }) {
+      const { imageFile } = payload
+      if (imageFile) {
+        const { success, data } = yield call(getS3Signature)
+        if (success) {
+          const formData = new FormData()
+          const key = `images/${imageFile.uid}_${imageFile.name}`
+          const { url, ...other } = data
+
+          Object.keys(other).forEach(k => formData.append(k, other[k]))
+
+          formData.append('key', key)
+          formData.append('file', imageFile)
+
+          const response = yield call(uploadImage, url, formData)
+          if (response.success) {
+            payload["avatar"] = `${url}/${key}`
+          }
+        }
+      }
+
       const data = yield call(createUser, payload);
       if (data.success) {
         yield put({ type: 'hideModal' });
@@ -123,6 +141,26 @@ const UserModel: IUserModelType = {
     },
 
     *update({ payload }, { select, call, put }) {
+      const { imageFile } = payload
+      if (imageFile) {
+        const { success, data } = yield call(getS3Signature)
+        if (success) {
+          const formData = new FormData()
+          const key = `images/${imageFile.uid}_${imageFile.name}`
+          const { url, ...other } = data
+
+          Object.keys(other).forEach(k => formData.append(k, other[k]))
+
+          formData.append('key', key)
+          formData.append('file', imageFile)
+
+          const response = yield call(uploadImage, url, formData)
+          if (response.success) {
+            payload["avatar"] = `${url}/${key}`
+          }
+        }
+      }
+
       const data = yield call(updateUser, payload);
       if (data.success) {
         yield put({ type: 'hideModal' });

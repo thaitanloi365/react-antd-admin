@@ -30,7 +30,7 @@ interface IFilterProps extends IFormProps {
 class Filter extends Component<IFilterProps> {
   handleFields = (fields: any) => {
     const { createTime } = fields;
-    if (createTime.length) {
+    if (createTime?.length) {
       fields.createTime = [
         moment(createTime[0]).format('YYYY-MM-DD'),
         moment(createTime[1]).format('YYYY-MM-DD'),
@@ -98,7 +98,7 @@ class Filter extends Component<IFilterProps> {
 
     return (
       <Row gutter={24}>
-        <Col {...ColProps} xl={{ span: 4 }} md={{ span: 8 }}>
+        <Col {...ColProps} xl={{ span: 6 }} md={{ span: 8 }}>
           {getFieldDecorator('name', { initialValue: name })(
             <Search
               placeholder="Search Name"
@@ -108,26 +108,8 @@ class Filter extends Component<IFilterProps> {
           )}
         </Col>
 
-        <Col
-          {...ColProps}
-          xl={{ span: 6 }}
-          md={{ span: 8 }}
-          sm={{ span: 12 }}
-          id="createTimeRangePicker"
-        >
-          <FilterItem label="CreateTime">
-            {getFieldDecorator('createTime', { initialValue: initialCreateTime })(
-              <RangePicker
-                style={{ width: '100%' }}
-                onChange={this.handleChange.bind(this, 'createTime')}
-                getCalendarContainer={() => {
-                  return document.getElementById('createTimeRangePicker');
-                }}
-              />,
-            )}
-          </FilterItem>
-        </Col>
-        <Col {...TwoColProps} xl={{ span: 10 }} md={{ span: 24 }} sm={{ span: 24 }}>
+
+        <Col {...TwoColProps} xl={{ span: 18 }} md={{ span: 16 }} sm={{ span: 24 }}>
           <Row type="flex" align="middle" justify="space-between">
             <div>
               <Button type="primary" className="margin-right" onClick={this.handleSubmit}>

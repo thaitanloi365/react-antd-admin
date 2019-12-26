@@ -38,7 +38,7 @@ class User extends PureComponent<IUserProps> {
     const { list, pagination, selectedRowKeys } = users;
 
     dispatch({
-      type: 'user/multiDelete',
+      type: 'users/multiDelete',
       payload: {
         ids: selectedRowKeys,
       },
@@ -66,7 +66,7 @@ class User extends PureComponent<IUserProps> {
         }}
         onAdd={() => {
           dispatch({
-            type: 'user/showModal',
+            type: 'users/showModal',
             payload: {
               modalType: 'create',
             },
@@ -84,14 +84,14 @@ class User extends PureComponent<IUserProps> {
     return (
       <List
         dataSource={list}
-        loading={loading.effects['user/query']}
+        loading={loading.effects['users/query']}
         pagination={pagination}
         rowSelection={{
           selectedRowKeys,
           onChange: keys => {
             console.log('**** keys', keys);
             dispatch({
-              type: 'user/updateState',
+              type: 'users/updateState',
               payload: {
                 selectedRowKeys: keys,
               },
@@ -100,7 +100,7 @@ class User extends PureComponent<IUserProps> {
         }}
         onEditItem={record => {
           dispatch({
-            type: 'user/showModal',
+            type: 'users/showModal',
             payload: {
               modalType: 'update',
               currentItem: record,
@@ -115,7 +115,7 @@ class User extends PureComponent<IUserProps> {
         }}
         onDeleteItem={id => {
           dispatch({
-            type: 'user/delete',
+            type: 'users/delete',
             payload: id,
           }).then(() => {
             this.handleRefresh({
@@ -141,11 +141,11 @@ class User extends PureComponent<IUserProps> {
         destroyOnClose={true}
         centered={true}
         maskClosable={false}
-        confirmLoading={loading.effects[`user/${modalType}`]}
+        confirmLoading={loading.effects[`users/${modalType}`]}
         title={`${modalType === 'create' ? 'Create User' : 'Update User'}`}
         onAccept={data => {
           dispatch({
-            type: `user/${modalType}`,
+            type: `users/${modalType}`,
             payload: data,
           }).then(() => {
             this.handleRefresh();
@@ -153,7 +153,7 @@ class User extends PureComponent<IUserProps> {
         }}
         onCancel={() => {
           dispatch({
-            type: 'user/hideModal',
+            type: 'users/hideModal',
           });
         }}
       />

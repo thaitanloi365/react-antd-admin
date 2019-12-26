@@ -4,7 +4,7 @@ import { router } from 'utils';
 import { stringify } from 'qs';
 import { queryLayout, pathMatchRegexp } from 'utils';
 import { CANCEL_REQUEST_MESSAGE } from 'utils/constants';
-import { logoutUser, queryUserInfo } from 'services/users';
+import { logoutUser, extendToken } from 'services/users';
 import { IMenuItem, INotificationItem, ITheme } from 'types';
 import { IModel, Reducer, Subscription, IConnectState } from 'models';
 import { Effect } from 'dva';
@@ -107,6 +107,7 @@ const AppModel: IAppModelType = {
     },
   },
   effects: {
+
     *query({ payload }, { call, put, select }) {
       const token = store.get('token', '');
       const { locationPathname } = yield select((state: IConnectState) => state.app);
@@ -121,7 +122,7 @@ const AppModel: IAppModelType = {
         return;
       }
 
-      const { success, data: user } = yield call(queryUserInfo, payload);
+      const { success, data: user } = yield call(extendToken, payload);
       if (success && user) {
         store.set('user', user);
         goDashboard();

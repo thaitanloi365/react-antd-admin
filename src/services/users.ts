@@ -14,6 +14,12 @@ export async function logoutUser() {
   });
 }
 
+export async function extendToken() {
+  return request('/api/app/user/token/extend', {
+    method: 'GET',
+  });
+}
+
 export async function queryUserInfo(params: ILoginParamsType) {
   return request('/api/app/user', {
     method: 'GET',
@@ -41,7 +47,7 @@ export async function updateUser(params: IUser) {
   });
 }
 
-export async function removeUserList(params: LoginParamsType) {
+export async function removeUserList(params: ILoginParamsType) {
   return request('/api/login', {
     method: 'POST',
     data: params,
@@ -51,5 +57,24 @@ export async function removeUserList(params: LoginParamsType) {
 export async function queryUser(id: string) {
   return request(`/api/admin/users/${id}`, {
     method: 'GET',
+  });
+}
+
+
+export async function getS3Signature() {
+  return request('/api/app/user/s3/signature', {
+    method: 'GET',
+  });
+}
+
+export async function uploadImage(url: string, formData: FormData) {
+  return request('', {
+    method: 'POST',
+    baseURL: url,
+    data: formData,
+    isAuthorized: false,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
   });
 }

@@ -20,19 +20,26 @@ function beforeUpload(file: RcFile) {
   return isJpgOrPng && isLt2M;
 }
 
-interface IImageUploadProps {}
+interface IImageUploadProps {
+  defaultImageURL: string;
+  onImageLoaded: (file: File) => void
+}
 
 interface IImageUploadState {
   loading: boolean;
-  imageURL: string | ArrayBuffer;
+  imageURL: string;
 }
 
 class ImageUpload extends React.Component<IImageUploadProps, IImageUploadState> {
-  state = {
-    imageURL: '',
-    loading: false,
-  };
 
+  constructor(props: IImageUploadProps) {
+    super(props)
+    const { defaultImageURL } = this.props
+    this.state = {
+      imageURL: defaultImageURL || '',
+      loading: false,
+    };
+  }
   handleChange = (info: UploadChangeParam) => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
@@ -40,14 +47,19 @@ class ImageUpload extends React.Component<IImageUploadProps, IImageUploadState> 
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageURL =>
+      getBase64(info.file.originFileObj, (imageURL) =>
         this.setState({
-          imageURL,
+          imageURL: imageURL as string,
           loading: false,
         }),
       );
+
+      const { onImageLoaded } = this.props
+      onImageLoaded(info.file.originFileObj as File)
     }
   };
+
+
 
   render() {
     const uploadButton = (
@@ -64,7 +76,6 @@ class ImageUpload extends React.Component<IImageUploadProps, IImageUploadState> 
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
       >

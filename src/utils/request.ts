@@ -22,8 +22,8 @@ const { CancelToken } = axios;
 // @ts-ignore
 window.cancelRequest = new Map();
 
-const request = (url: string, options: AxiosRequestConfig) => {
-  let { data, baseURL = config.baseURL } = options;
+const request = (url: string, options: AxiosRequestConfig & { isAuthorized?: boolean }) => {
+  let { data, baseURL = config.baseURL, isAuthorized = true } = options;
 
   const cloneData = cloneDeep(data);
 
@@ -48,6 +48,10 @@ const request = (url: string, options: AxiosRequestConfig) => {
     message.error(e.message);
   }
 
+  options.headers = {
+    ...options.headers,
+    isAuthorized,
+  }
   options.url = url;
   options.params = cloneData;
   options.baseURL = baseURL;
@@ -90,9 +94,9 @@ const request = (url: string, options: AxiosRequestConfig) => {
       console.log('**** error', response);
 
       if (String(message) === CANCEL_REQUEST_MESSAGE) {
-        return {
+        return Promise.reject({
           success: false,
-        };
+        });
       }
 
       let msg;
@@ -129,7 +133,8 @@ axios.interceptors.request.use(
   function (config) {
     const token = store.get('token');
 
-    if (typeof token === 'string' && token !== '') {
+
+    if (config.headers.isAuthorized && typeof token === 'string' && token !== '') {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;

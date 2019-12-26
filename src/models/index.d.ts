@@ -10,6 +10,15 @@ import { IUserDetailModelState } from 'pages/users/$id/models/detail';
 
 export { GlobalModelState, Reducer, Effect, Subscription };
 
+export interface IS3Signature {
+  "acl": string;
+  "policy": string;
+  "url": string;
+  "x-amz-algorithm": string;
+  "x-amz-credential": string;
+  "x-amz-date": string;
+  "x-amz-signature": string
+}
 export interface IModel<T> {
   namespace?: string;
   state?: T;
