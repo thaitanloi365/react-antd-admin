@@ -1,5 +1,13 @@
 import { pathMatchRegexp } from 'utils';
-import { queryUserList, createUser, removeUser, updateUser, removeUserList, getS3Signature, uploadImage } from 'services/users';
+import {
+  queryUserList,
+  createUser,
+  removeUser,
+  updateUser,
+  removeUserList,
+  getS3Signature,
+  uploadImage,
+} from 'services/users';
 import { IModel, IConnectState, Reducer, Effect } from './index';
 import { IUser } from 'types';
 
@@ -58,7 +66,7 @@ const UserModel: IUserModelType = {
       history.listen(location => {
         if (pathMatchRegexp('/users', location.pathname)) {
           // @ts-ignore
-          const payload = location.query || { page: 1, pageSize: 10 };
+          const payload = location.query;
           dispatch({
             type: 'query',
             payload,
@@ -72,15 +80,22 @@ const UserModel: IUserModelType = {
     *query({ payload = {} }, { call, put }) {
       const { success, data } = yield call(queryUserList, payload);
 
+      console.log('**** data', data);
+      const pagination = {
+        current: Number(data.current_page),
+        pageSize: Number(data.per_page),
+        total: Number(data.total_page),
+      };
+      console.log('**** pagination', pagination);
       if (success && data) {
         yield put({
           type: 'querySuccess',
           payload: {
             list: data.records,
             pagination: {
-              current: Number(data.page) || 1,
-              pageSize: Number(data.per_page) || 10,
-              total: Number(data.total_page),
+              current: Number(data.current_page),
+              pageSize: Number(data.per_page),
+              total: Number(data.total_record),
             },
           },
         });
@@ -112,22 +127,22 @@ const UserModel: IUserModelType = {
     },
 
     *create({ payload }, { call, put }) {
-      const { imageFile } = payload
+      const { imageFile } = payload;
       if (imageFile) {
-        const { success, data } = yield call(getS3Signature)
+        const { success, data } = yield call(getS3Signature);
         if (success) {
-          const formData = new FormData()
-          const key = `images/${imageFile.uid}_${imageFile.name}`
-          const { url, ...other } = data
+          const formData = new FormData();
+          const key = `images/${imageFile.uid}_${imageFile.name}`;
+          const { url, ...other } = data;
 
-          Object.keys(other).forEach(k => formData.append(k, other[k]))
+          Object.keys(other).forEach(k => formData.append(k, other[k]));
 
-          formData.append('key', key)
-          formData.append('file', imageFile)
+          formData.append('key', key);
+          formData.append('file', imageFile);
 
-          const response = yield call(uploadImage, url, formData)
+          const response = yield call(uploadImage, url, formData);
           if (response.success) {
-            payload["avatar"] = `${url}/${key}`
+            payload['avatar'] = `${url}/${key}`;
           }
         }
       }
@@ -141,22 +156,22 @@ const UserModel: IUserModelType = {
     },
 
     *update({ payload }, { select, call, put }) {
-      const { imageFile } = payload
+      const { imageFile } = payload;
       if (imageFile) {
-        const { success, data } = yield call(getS3Signature)
+        const { success, data } = yield call(getS3Signature);
         if (success) {
-          const formData = new FormData()
-          const key = `images/${imageFile.uid}_${imageFile.name}`
-          const { url, ...other } = data
+          const formData = new FormData();
+          const key = `images/${imageFile.uid}_${imageFile.name}`;
+          const { url, ...other } = data;
 
-          Object.keys(other).forEach(k => formData.append(k, other[k]))
+          Object.keys(other).forEach(k => formData.append(k, other[k]));
 
-          formData.append('key', key)
-          formData.append('file', imageFile)
+          formData.append('key', key);
+          formData.append('file', imageFile);
 
-          const response = yield call(uploadImage, url, formData)
+          const response = yield call(uploadImage, url, formData);
           if (response.success) {
-            payload["avatar"] = `${url}/${key}`
+            payload['avatar'] = `${url}/${key}`;
           }
         }
       }

@@ -16,8 +16,10 @@ export interface ILoginParamsType {
 }
 
 export interface IUserQueryParamsType {
-  name: string;
-  created_at: [string, string];
+  name?: string;
+  created_at?: [string, string];
+  page?: number;
+  per_page?: number;
 }
 
 export interface INotificationItem {

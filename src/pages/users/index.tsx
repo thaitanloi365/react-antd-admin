@@ -8,6 +8,7 @@ import { IConnectState } from 'models';
 import List from './components/List';
 import Filter from './components/Filter';
 import Modal from './components/Modal';
+import { IUserQueryParamsType } from 'types';
 
 interface IUserProps extends IConnectState {
   dispatch: Function;
@@ -16,7 +17,7 @@ interface IUserProps extends IConnectState {
 }
 
 class User extends PureComponent<IUserProps> {
-  handleRefresh = (newQuery?: Object) => {
+  handleRefresh = (newQuery?: IUserQueryParamsType) => {
     const { location } = this.props;
     const { query, pathname } = location;
 
@@ -110,7 +111,7 @@ class User extends PureComponent<IUserProps> {
         onChange={page => {
           this.handleRefresh({
             page: page.current,
-            pageSize: page.pageSize,
+            per_page: page.pageSize,
           });
         }}
         onDeleteItem={id => {

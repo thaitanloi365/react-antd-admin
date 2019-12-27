@@ -1,9 +1,10 @@
 import request from 'utils/request';
+import { stringify } from 'qs';
 import { IUser, ILoginParamsType, IUserQueryParamsType } from 'types';
 
 export async function queryUserList(params: IUserQueryParamsType) {
-  const { name = '' } = params;
-  return request(`/api/admin/users?name=${name}`, {
+  const query = stringify(params);
+  return request(`/api/admin/users?${query}`, {
     method: 'GET',
   });
 }
@@ -60,7 +61,6 @@ export async function queryUser(id: string) {
   });
 }
 
-
 export async function getS3Signature() {
   return request('/api/app/user/s3/signature', {
     method: 'GET',
@@ -75,6 +75,6 @@ export async function uploadImage(url: string, formData: FormData) {
     isAuthorized: false,
     headers: {
       'Content-Type': 'multipart/form-data',
-    }
+    },
   });
 }
