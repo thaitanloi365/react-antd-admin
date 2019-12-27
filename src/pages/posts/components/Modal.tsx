@@ -3,6 +3,7 @@ import { Form, Input, Modal } from 'antd';
 import { ModalProps } from 'antd/lib/modal';
 import { IFormProps, IPost } from 'types';
 import { ICurrentItem } from 'models/posts';
+import TagsPost from './Tags';
 
 const FormItem = Form.Item;
 
@@ -40,9 +41,17 @@ class PostModal extends PureComponent<IModalProps> {
       const data: any = {
         ...getFieldsValue(),
       };
+      console.log('data', data);
 
       onAccept(data);
     });
+  };
+
+  onSubmitTag = value => {
+    const { form } = this.props;
+    const { setFieldsValue } = form;
+
+    setFieldsValue({ tags: value });
   };
 
   render() {
@@ -55,17 +64,19 @@ class PostModal extends PureComponent<IModalProps> {
           <FormItem label="Title" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator('title', {
               initialValue: item?.title,
+              rules: [{ required: true, message: 'Please enter title post' }],
             })(<Input />)}
           </FormItem>
           <FormItem label="Content" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator('content', {
               initialValue: item?.content,
+              rules: [{ required: true, message: 'Please enter content post' }],
             })(<Input />)}
           </FormItem>
-          <FormItem label="Tag" hasFeedback={true} {...formItemLayout}>
-            {getFieldDecorator('tag', {
-              initialValue: item?.tag,
-            })(<Input />)}
+          <FormItem label="Tag" hasFeedback={true} {...formItemLayout} validateStatus="">
+            {getFieldDecorator('tags', {
+              initialValue: item?.tags,
+            })(<TagsPost onSubmitTag={this.onSubmitTag} />)}
           </FormItem>
         </Form>
       </Modal>

@@ -28,6 +28,11 @@ class List extends PureComponent<IListProps> {
       key: 'content',
       dataIndex: 'content',
     },
+    {
+      title: 'Tags',
+      key: 'tags',
+      dataIndex: 'tags',
+    },
   ];
 
   render() {
