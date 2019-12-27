@@ -10,7 +10,7 @@ export async function queryUserList(params: IUserQueryParamsType) {
 }
 
 export async function logoutUser() {
-  return request('/api/logout', {
+  return request('/api/app/user/logout', {
     method: 'DELETE',
   });
 }
