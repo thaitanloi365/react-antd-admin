@@ -45,6 +45,17 @@ export interface IUser {
   avatar: string;
 }
 
+export interface IPost {
+  created_at: string;
+  updated_at: string;
+  id: number;
+  email: string;
+  title: string;
+  content: string;
+  owner_id: number;
+  owner: string;
+}
+
 export interface IFilter {
   name: string;
   createTime: Array<Date>;

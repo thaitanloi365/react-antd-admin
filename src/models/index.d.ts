@@ -4,6 +4,7 @@ import { RouterTypes } from 'umi';
 import { GlobalModelState } from './global';
 import { IUserModelState } from './users';
 import { ILoginModelType } from './login';
+import { IPostModelState } from './posts';
 import { Subscription, Effect } from 'dva';
 import { IAppModelType, IAppModelState } from './app';
 import { IUserDetailModelState } from 'pages/users/$id/models/detail';
@@ -11,13 +12,13 @@ import { IUserDetailModelState } from 'pages/users/$id/models/detail';
 export { GlobalModelState, Reducer, Effect, Subscription };
 
 export interface IS3Signature {
-  "acl": string;
-  "policy": string;
-  "url": string;
-  "x-amz-algorithm": string;
-  "x-amz-credential": string;
-  "x-amz-date": string;
-  "x-amz-signature": string
+  acl: string;
+  policy: string;
+  url: string;
+  'x-amz-algorithm': string;
+  'x-amz-credential': string;
+  'x-amz-date': string;
+  'x-amz-signature': string;
 }
 export interface IModel<T> {
   namespace?: string;
@@ -45,6 +46,7 @@ export interface IConnectState {
   users: IUserModelState;
   login: ILoginModelType;
   userDetails: IUserDetailModelState;
+  posts: IPostModelState;
 }
 
 export interface Route extends MenuDataItem {
