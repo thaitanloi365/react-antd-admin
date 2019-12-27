@@ -15,8 +15,8 @@ class List extends PureComponent<IListProps> {
     },
     {
       title: 'Owner ID',
-      key: 'id',
-      dataIndex: 'owner.id',
+      key: 'owner_id',
+      dataIndex: 'owner_id',
     },
     {
       title: 'Title',

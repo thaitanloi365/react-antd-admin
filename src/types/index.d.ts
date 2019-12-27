@@ -49,7 +49,6 @@ export interface IPost {
   created_at: string;
   updated_at: string;
   id: number;
-  email: string;
   title: string;
   content: string;
   owner_id: number;

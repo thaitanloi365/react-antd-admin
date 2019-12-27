@@ -1,5 +1,5 @@
 import { pathMatchRegexp } from 'utils';
-import { queryPostList } from 'services/posts';
+import { queryPostList, createPost } from 'services/posts';
 import { IModel, IConnectState, Reducer, Effect } from './index';
 import { IPost } from 'types';
 
@@ -26,13 +26,14 @@ export interface IUserModelType extends IModel<IPostModelState> {
     query: Effect;
     // delete: Effect;
     // multiDelete: Effect;
-    // create: Effect;
+    create: Effect;
     // update: Effect;
   };
   reducers: {
     showModal: Reducer<IPostModelState>;
     hideModal: Reducer<IPostModelState>;
     querySuccess: Reducer<IPostModelState>;
+    createSuccess: Reducer<IPostModelState>;
   };
 }
 
@@ -111,25 +112,18 @@ const PostModel: IUserModelType = {
     //   }
     // },
 
-    // *create({ payload }, { call, put }) {
-    //   const { imageFile } = payload;
-    //   if (imageFile) {
-    //     const { success, data } = yield call(getS3Signature);
-    //     if (success) {
-    //       const formData = new FormData();
-    //       const key = `images/${imageFile.uid}_${imageFile.name}`;
-    //       const { url, ...other } = data;
-
-    //       Object.keys(other).forEach(k => formData.append(k, other[k]));
-
-    //       formData.append('key', key);
-    //       formData.append('file', imageFile);
-
-    //       const response = yield call(uploadImage, url, formData);
-    //       if (response.success) {
-    //         payload['avatar'] = `${url}/${key}`;
-    //       }
-    //     }
+    *create({ payload }, { call, put }) {
+      const { success, data } = yield call(createPost, payload);
+      if (success && data) {
+        yield put({ type: 'hideModal' });
+        yield put({
+          type: 'createSuccess',
+          payload: data,
+        });
+      } else {
+        alert(data);
+      }
+    },
     //   }
 
     //   const data = yield call(createUser, payload);
@@ -188,6 +182,16 @@ const PostModel: IUserModelType = {
           ...state.pagination,
           ...pagination,
         },
+      };
+    },
+
+    createSuccess(state, { payload }) {
+      const newList = [...state.list];
+      newList.push(payload);
+
+      return {
+        ...state,
+        list: newList,
       };
     },
   },

@@ -6,3 +6,10 @@ export async function queryPostList(params: IPost) {
     method: 'GET',
   });
 }
+
+export async function createPost(params: IPost) {
+  return request(`/api/admin/posts`, {
+    method: 'POST',
+    data: params,
+  });
+}
