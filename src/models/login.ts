@@ -18,10 +18,7 @@ const Model: ILoginModelType = {
 
   effects: {
     *login({ payload }, { put, call, select }) {
-      console.log('payload', payload);
       const { success, data } = yield call(accountLogin, payload);
-
-      console.log('**** data', data);
       if (success && data) {
         store.set('token', data.token);
         store.set('user', data.user);

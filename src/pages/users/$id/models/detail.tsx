@@ -37,7 +37,6 @@ const Model: IUserDetailModelType = {
 
   effects: {
     *query({ payload }, { call, put }) {
-      console.log('*** payload', payload);
       const response = yield call(queryUser, payload);
       const { success, message, status, data } = response;
       if (success) {

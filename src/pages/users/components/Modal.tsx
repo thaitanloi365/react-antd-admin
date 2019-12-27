@@ -22,15 +22,15 @@ interface IModalProps extends IFormProps, ModalProps {
 }
 
 interface IModelState {
-  imageFile: File | null
+  imageFile: File | null;
 }
 class UserModal extends PureComponent<IModalProps, IModelState> {
   state: IModelState = {
-    imageFile: null
-  }
+    imageFile: null,
+  };
 
   handleOk = () => {
-    const { imageFile } = this.state
+    const { imageFile } = this.state;
     const { item, onAccept, form } = this.props;
     const { validateFields, getFieldsValue } = form;
 
@@ -48,35 +48,6 @@ class UserModal extends PureComponent<IModalProps, IModelState> {
     });
   };
 
-  // request("/api/upload/signature", {
-  //   method: 'GET'
-  // }).then((response => {
-  //   const data = response.data as IS3Signature
-  //   const { url, ...payload } = data
-  //   const formData = new FormData()
-  //   const key = `/test/${new Date()}`
-  //   formData.append('file', file)
-  //   formData.append('key', key)
-  //   Object.keys(payload).forEach(key => formData.append(key, payload[key]))
-
-  //   fileURL = url + key;
-  //   return Axios.post(data.url, formData, {
-  //     onUploadProgress: (progress) => {
-  //       onProgress(
-  //         {
-  //           percent: Math.round((progress.loaded / progress.total) * 100)
-  //         },
-  //         file
-  //       );
-  //     },
-  //   })
-  // })).then(() => {
-  //   onSuccess(data.response, file);
-  // }).catch(error => {
-  //   onError()
-  //   console.error("**** error", error)
-  // })
-
   render() {
     const { item, onOk, form, ...modalProps } = this.props;
     const { getFieldDecorator } = form;
@@ -86,7 +57,10 @@ class UserModal extends PureComponent<IModalProps, IModelState> {
         <Form layout="horizontal">
           <Row type="flex" justify="center">
             <div>
-              <ImageUpload defaultImageURL={item?.avatar} onImageLoaded={file => this.setState({ imageFile: file })} />
+              <ImageUpload
+                defaultImageURL={item?.avatar}
+                onImageLoaded={file => this.setState({ imageFile: file })}
+              />
             </div>
           </Row>
           <FormItem label="Name" hasFeedback={true} {...formItemLayout}>
@@ -128,6 +102,5 @@ class UserModal extends PureComponent<IModalProps, IModelState> {
     );
   }
 }
-
 
 export default Form.create<IModalProps>()(UserModal);

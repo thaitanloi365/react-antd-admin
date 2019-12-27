@@ -51,7 +51,7 @@ const request = (url: string, options: AxiosRequestConfig & { isAuthorized?: boo
   options.headers = {
     ...options.headers,
     isAuthorized,
-  }
+  };
   options.url = url;
   options.params = cloneData;
   options.baseURL = baseURL;
@@ -91,8 +91,6 @@ const request = (url: string, options: AxiosRequestConfig & { isAuthorized?: boo
     .catch((error: AxiosError) => {
       const { response, message } = error;
 
-      console.log('**** error', response);
-
       if (String(message) === CANCEL_REQUEST_MESSAGE) {
         return Promise.reject({
           success: false,
@@ -130,25 +128,24 @@ const request = (url: string, options: AxiosRequestConfig & { isAuthorized?: boo
 };
 
 axios.interceptors.request.use(
-  function (config) {
+  function(config) {
     const token = store.get('token');
-
 
     if (config.headers.isAuthorized && typeof token === 'string' && token !== '') {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
-  function (error) {
+  function(error) {
     return Promise.reject(error);
   },
 );
 
 axios.interceptors.response.use(
-  function (response) {
+  function(response) {
     return response;
   },
-  function (error) {
+  function(error) {
     return Promise.reject(error);
   },
 );

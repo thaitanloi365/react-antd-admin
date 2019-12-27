@@ -21,7 +21,6 @@ class User extends PureComponent<IUserProps> {
     const { location } = this.props;
     const { query, pathname } = location;
 
-    console.log(newQuery);
     router.push({
       pathname,
       search: stringify(
@@ -81,7 +80,6 @@ class User extends PureComponent<IUserProps> {
     const { dispatch, users, loading } = this.props;
     const { list, pagination, selectedRowKeys } = users;
 
-    console.log(this.props);
     return (
       <List
         dataSource={list}
@@ -90,7 +88,6 @@ class User extends PureComponent<IUserProps> {
         rowSelection={{
           selectedRowKeys,
           onChange: keys => {
-            console.log('**** keys', keys);
             dispatch({
               type: 'users/updateState',
               payload: {

@@ -79,14 +79,11 @@ const UserModel: IUserModelType = {
   effects: {
     *query({ payload = {} }, { call, put }) {
       const { success, data } = yield call(queryUserList, payload);
-
-      console.log('**** data', data);
       const pagination = {
         current: Number(data.current_page),
         pageSize: Number(data.per_page),
         total: Number(data.total_page),
       };
-      console.log('**** pagination', pagination);
       if (success && data) {
         yield put({
           type: 'querySuccess',
