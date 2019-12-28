@@ -6,8 +6,11 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 .DEFAULT_GOAL := help
 	
-build_client:
-	@yarn build;\
+build_client: ## Build react app
+	@yarn build;
+	
+build_container: ## Build container
+	@docker build -f docker/heroku/Dockerfile -t web .;\
 	heroku container:push web --app lapi-go-admin;\
 	heroku container:release web --app lapi-go-admin;
 
