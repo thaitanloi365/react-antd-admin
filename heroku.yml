@@ -2,4 +2,3 @@ build:
   docker:
     web:
       dockerfile: docker/heroku/Dockerfile
-      context: .
