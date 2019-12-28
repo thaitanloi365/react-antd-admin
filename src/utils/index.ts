@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 // export const { defaultLanguage } = i18n
 // export const languages = i18n.languages.map(item => item.key)
-export const languages = [];
+export const languages: Array<any> = [];
 export const defaultLanguage = 'en';
 
 /**
@@ -14,7 +14,7 @@ export const defaultLanguage = 'en';
  * @param   {string}        value   The value of the object that needs to be queried.
  * @return  {object|undefined}   Return frist object when query success.
  */
-export function queryArray(array, key, value) {
+export function queryArray(array: Array<any>, key: string, value: string) {
   if (!Array.isArray(array)) {
     return;
   }
@@ -29,8 +29,8 @@ export function queryArray(array, key, value) {
  * @param   {string}    children  The alias of children of the object in the array.
  * @return  {array}    Return a tree-structured array.
  */
-export function arrayToTree(array, id = 'id', parentId = 'pid', children = 'children') {
-  const result = [];
+export function arrayToTree(array: Array<any>, id = 'id', parentId = 'pid', children = 'children') {
+  const result: Array<any> = [];
   const hash = {};
   const data = _.cloneDeep(array);
 
@@ -63,7 +63,7 @@ export const router = myRouter;
  * @param   {string}                  pathname   Specify the pathname to match.
  * @return  {array|null}              Return the result of the match or null.
  */
-export function pathMatchRegexp(regexp, pathname) {
+export function pathMatchRegexp(regexp: string, pathname: string) {
   return pathToRegexp(regexp).exec(pathname);
 }
 
@@ -75,12 +75,12 @@ export function pathMatchRegexp(regexp, pathname) {
  * @param   {string}    id        The alias of the unique ID of the object in the array.
  * @return  {array}    Return a key array.
  */
-export function queryPathKeys(array, current, parentId, id = 'id') {
+export function queryPathKeys(array: Array<string>, current: string, parentId: string, id = 'id') {
   const result = [current];
   const hashMap = new Map();
   array.forEach(item => hashMap.set(item[id], item));
 
-  const getPath = current => {
+  const getPath = (current: string) => {
     const currentParentId = hashMap.get(current)[parentId];
     if (currentParentId) {
       result.push(currentParentId);
@@ -100,12 +100,12 @@ export function queryPathKeys(array, current, parentId, id = 'id') {
  * @param   {string}    id        The alias of the unique ID of the object in the array.
  * @return  {array}    Return a key array.
  */
-export function queryAncestors(array, current, parentId, id = 'id') {
+export function queryAncestors(array: Array<string>, current: string, parentId: string, id = 'id') {
   const result = [current];
   const hashMap = new Map();
   array.forEach(item => hashMap.set(item[id], item));
 
-  const getPath = current => {
+  const getPath = (current: string) => {
     const currentParentId = hashMap.get(current[id])[parentId];
     if (currentParentId) {
       result.push(hashMap.get(currentParentId));
@@ -123,10 +123,10 @@ export function queryAncestors(array, current, parentId, id = 'id') {
  * @param   {pathname}    pathname  Path name to be queried.
  * @return  {string}   Return frist object when query success.
  */
-export function queryLayout(layouts, pathname) {
+export function queryLayout(layouts: any, pathname: string) {
   let result = 'public';
 
-  const isMatch = regepx => {
+  const isMatch = (regepx: RegExp) => {
     return regepx instanceof RegExp ? regepx.test(pathname) : pathMatchRegexp(regepx, pathname);
   };
 

@@ -1,10 +1,10 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Menu, Icon, Layout, Avatar, Popover, Badge, List } from 'antd';
 import { Ellipsis } from 'ant-design-pro';
-import moment from 'moment';
-import classnames from 'classnames';
-import styles from './Header.less';
 import { IMenus, IUser } from 'types';
+import classnames from 'classnames';
+import moment from 'utils/date';
+import styles from './Header.less';
 
 const { SubMenu } = Menu;
 

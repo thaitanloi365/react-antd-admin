@@ -5,7 +5,7 @@ import { DropOption } from 'components';
 import Link from 'umi/link';
 import styles from './List.less';
 import { IUser } from 'types';
-import moment from 'moment'
+import { formatDate } from 'utils/date';
 const { confirm } = Modal;
 
 interface IListProps extends TableProps<IUser> {
@@ -41,7 +41,7 @@ class List extends PureComponent<IListProps> {
         dataIndex: 'avatar',
         width: 72,
         fixed: 'left',
-        render: (text) => <Avatar style={{ marginLeft: 8 }} src={text} />,
+        render: text => <Avatar style={{ marginLeft: 8 }} src={text} />,
       },
       {
         title: 'Name',
@@ -53,7 +53,6 @@ class List extends PureComponent<IListProps> {
         title: 'Phone',
         dataIndex: 'phone',
         key: 'phone',
-
       },
       {
         title: 'Email',
@@ -64,7 +63,7 @@ class List extends PureComponent<IListProps> {
         title: 'Created At',
         dataIndex: 'created_at',
         key: 'created_at',
-        render: (text) => <span >{moment(text).format("YYYY-MM-DD")}</span>,
+        render: text => <span>{formatDate(text)}</span>,
       },
       {
         title: 'Operation',

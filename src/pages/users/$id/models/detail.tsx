@@ -4,7 +4,7 @@ import { IModel, Effect, Reducer } from 'models';
 import { IUser } from 'types';
 
 export interface IUserDetailModelState {
-  data: IUser | Object;
+  data: IUser;
 }
 
 export interface IUserDetailModelType extends IModel<IUserDetailModelState> {
@@ -20,7 +20,7 @@ const Model: IUserDetailModelType = {
   namespace: 'userDetails',
 
   state: {
-    data: {},
+    data: null,
   },
 
   subscriptions: {

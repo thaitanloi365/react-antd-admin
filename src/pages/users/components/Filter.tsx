@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import { FilterItem } from 'components';
 import { Form, Button, Row, Col, DatePicker, Input } from 'antd';
 import { IFormProps, IFilter } from 'types';
+import moment, { formatDate } from 'utils/date';
 
 const { Search } = Input;
 const { RangePicker } = DatePicker;
@@ -31,10 +31,7 @@ class Filter extends Component<IFilterProps> {
   handleFields = (fields: any) => {
     const { createTime } = fields;
     if (createTime?.length) {
-      fields.createTime = [
-        moment(createTime[0]).format('YYYY-MM-DD'),
-        moment(createTime[1]).format('YYYY-MM-DD'),
-      ];
+      fields.createTime = [formatDate(createTime[0]), formatDate(createTime[1])];
     }
     return fields;
   };
@@ -107,7 +104,6 @@ class Filter extends Component<IFilterProps> {
             />,
           )}
         </Col>
-
 
         <Col {...TwoColProps} xl={{ span: 18 }} md={{ span: 16 }} sm={{ span: 24 }}>
           <Row type="flex" align="middle" justify="space-between">
