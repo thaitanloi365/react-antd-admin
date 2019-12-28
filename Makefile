@@ -11,39 +11,12 @@ export $(shell sed 's/=.*//' $(cnf))
 help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 .DEFAULT_GOAL := help
-
-# Docs
-doc: ## Generate docs
-	swag init
-
-dev: ##
-	CompileDaemon -build="go build -o main $(ROOT_DIR)"  -command="$(ROOT_DIR)/main serve" -directory="$(ROOT_DIR)" -pattern=".go"
-# Build the container
-version: ## Get current version
-	@echo "Current versionn ${APP_NAME}:${VERSION}"
-
-## Serve dev development
-up: verify
-	docker-compose -f $(DOCKER_COMPOSE_FILE) up
-
-verify: ## Verify docker-compose
-	docker-compose -f $(DOCKER_COMPOSE_FILE) config
-
-down: ## Down a container and remove volumes
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down -v
-
-backup:
-	@dir=$$PWD/backups;\
-	echo "Backup dirctory: $$dir";\
-	echo "Current time: $$(date "+%Y.%m.%d-%H.%M.%S")";\
-	mkdir -p "$$dir";\
-	pg_dump --file "$$PWD/backups/$$(date "+%Y.%m.%d-%H.%M.%S")" --host $(DB_HOST) --port $(DB_PORT) --username $(DB_USER)  --verbose --format=c --blobs $(DB_NAME);
 	
 build_client:
-	@cd client && git pull origin master && yarn && yarn build && cd .. && rm -rf ./public/* && cp -rf client/dist/* ./public
+	yarn build
 
 export_heroku_env: #export env
-	@export ENV_FILE="$$PWD/docker/heroku/.env";echo $$ENV_FILE;\
+	@export ENV_FILE="$$PWD/.env";echo $$ENV_FILE;\
 	export vars="";\
 	while IFS= read -r line; do\
         if [[ -z $$line ]] ; then\
@@ -79,32 +52,12 @@ heroku:
 	if [ $$answer != "$${answer#[Yy]}" ] ;then\
 		make export_heroku_env;\
 	fi;\
-	read -p "Build client (y/n), enter to skip " answer2;\
+	read -p "Build app (y/n), enter to skip " answer2;\
 	answer2=$${answer2:-n};\
 	if [ $$answer2 != "$${answer2#[Yy]}" ] ;then\
 		make build_client;\
 	fi;\
-	rm -f cp_main;\
-	while read -r line; do \
-		if [ "$$line" = "// @host localhost:8080" ]; then \
-			echo '//// @host localhost:8080' >> cp_main;\
-			continue;\
-		fi;\
-		if [ "$$line" = "// @schemes http https" ]; then \
-			echo '//// @schemes http https' >> cp_main;\
-			continue;\
-		fi;\
-		echo $$line >> cp_main;\
-    done < main.go ;\
-	mv -f main.go temp_main ;\
-	mv -f cp_main main.go ;\
-	make doc ;\
-	mv -f temp_main main.go ;\
-	git add . ;\
-	git commit -m "$$commit";\
-	git push -u origin master;\
-	git push -f heroku master;\
-	make doc
+	
 	
 build-no-cache: ## Build the container without caching
 	docker build --no-cache -t $(APP_NAME):$(VERSION) .
