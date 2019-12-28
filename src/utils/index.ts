@@ -1,6 +1,7 @@
 import umiRouter from 'umi/router';
 import pathToRegexp from 'path-to-regexp';
 import _ from 'lodash';
+import { IMenuItem } from 'types';
 
 // export const { defaultLanguage } = i18n
 // export const languages = i18n.languages.map(item => item.key)
@@ -100,12 +101,17 @@ export function queryPathKeys(array: Array<string>, current: string, parentId: s
  * @param   {string}    id        The alias of the unique ID of the object in the array.
  * @return  {array}    Return a key array.
  */
-export function queryAncestors(array: Array<string>, current: string, parentId: string, id = 'id') {
+export function queryAncestors(
+  array: Array<IMenuItem>,
+  current: IMenuItem,
+  parentId: string,
+  id = 'id',
+) {
   const result = [current];
   const hashMap = new Map();
   array.forEach(item => hashMap.set(item[id], item));
 
-  const getPath = (current: string) => {
+  const getPath = (current: IMenuItem) => {
     const currentParentId = hashMap.get(current[id])[parentId];
     if (currentParentId) {
       result.push(hashMap.get(currentParentId));
