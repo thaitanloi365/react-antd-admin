@@ -57,7 +57,7 @@ class PostModal extends PureComponent<IModalProps> {
   render() {
     const { item, onOk, form, ...modalProps } = this.props;
     const { getFieldDecorator } = form;
-
+    console.log('item post', item);
     return (
       <Modal {...modalProps} onOk={this.handleOk}>
         <Form layout="horizontal">

@@ -49,17 +49,19 @@ class Posts extends Component<IPostProps> {
 
   render() {
     const { posts } = this.props;
-    const { modalVisible, modalType } = posts;
+    const { modalVisible, modalType, currentItem } = posts;
     console.log('posts', posts);
     return (
       <Card>
         <Filter onAdd={this.onAdd} />
         <List dataSource={posts.list} pagination={posts.pagination} />
         <PostModal
-          title={`${modalType.toUpperCase()} Post`}
+          title={`${modalType} Post`}
+          destroyOnClose={true}
           visible={modalVisible}
           onAccept={this.onAccept}
           onCancel={this.togglePostModal}
+          item={modalType === 'create' ? null : currentItem}
         />
       </Card>
     );
